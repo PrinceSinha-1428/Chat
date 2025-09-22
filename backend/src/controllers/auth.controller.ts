@@ -13,7 +13,7 @@ export const signUp = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     if(!name || !email || !password){
-      return res.status(400).json({ sucess: false,  message: "All fields required" });
+      return res.status(400).json({ sucess: false,  message: "All fields are required" });
     }
 
     if(password.length < 6) return res.status(400).json({ sucess: false, message: "Password must be 6 character long"});
@@ -51,6 +51,10 @@ export const signIn = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
+     if(!email || !password){
+      return res.status(400).json({ sucess: false,  message: "All fields are required" });
+    }
+
     const user  = await User.findOne({ email });
     if(!user) return res.status(400).json({ message: "Invalid Credentials" });
 
@@ -69,4 +73,13 @@ export const signIn = async (req: Request, res: Response) => {
 export const signOut = async (_req: Request,res: Response) => {
   res.cookie("jwt", "", { maxAge: 0});
   return res.status(200).json({ success: true, message: "Signed out successfully"})
+};
+
+
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
 }
