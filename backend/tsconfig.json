@@ -14,7 +14,10 @@
     "paths": {
       "@config/*": ["config/*"],
       "@controllers/*": ["controllers/*"],
-      "@routes/*": ["routes/*"]
+      "@routes/*": ["routes/*"],
+      "@models/*": ["models/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@lib/*": ["lib/*"],
     }
   },
   "include": ["src/**/*"],

@@ -14,13 +14,14 @@ connectDB();
 
 
 
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 
 if(ENV.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-  app.use((req,res) => {
+  app.use((_req,res) => {
     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"))
   })
 }
