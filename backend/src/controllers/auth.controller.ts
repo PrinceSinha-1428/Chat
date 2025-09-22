@@ -2,6 +2,8 @@ import User from "@models/user.model";
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { generateToken, returnError } from "@lib/utils";
+import { sendWelcomeEmail } from "emails/emailHandlers";
+import { ENV } from "@config/env";
 
 
 
@@ -29,7 +31,13 @@ export const signUp = async (req: Request, res: Response) => {
     if(newUser){
       const savedUser = await newUser.save();
       generateToken(savedUser.id, res);
-      return res.status(201).json({ message: "user created succesfully", newUser });
+      try {
+        await sendWelcomeEmail(savedUser.email,savedUser.name, ENV.CLIENT_URL)
+      } catch (error) {
+        console.log("failed to send welcome email")
+      } finally {
+        return res.status(201).json({ message: "user created succesfully", newUser });
+      }
     } else {
       return res.status(400).json({ message: "Invalid User Data"});
     }
