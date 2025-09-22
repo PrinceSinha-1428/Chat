@@ -11,7 +11,7 @@ export const generateToken = (id: mongoose.ObjectId, res: Response) => {
   const token = jwt.sign({id}, JWT_SECRET, { expiresIn: '7d'});
 
   if(!NODE_ENV) throw new Error("JWT is not configured");
-  
+
   res.cookie("jwt",token,{
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -22,6 +22,6 @@ export const generateToken = (id: mongoose.ObjectId, res: Response) => {
 
 export const returnError = (error: unknown, res: Response) => {
   if(error instanceof Error){
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ sucess: false, message: error.message });
   }
 }
