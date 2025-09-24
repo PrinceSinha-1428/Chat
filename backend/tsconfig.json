@@ -11,6 +11,8 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
+    "types": ["node", "express"],
+    "typeRoots": ["./src/types", "./node_modules/@types"],
     "paths": {
       "@config/*": ["config/*"],
       "@controllers/*": ["controllers/*"],
@@ -20,6 +22,6 @@
       "@lib/*": ["lib/*"],
     }
   },
-  "include": ["src/**/*", "types"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

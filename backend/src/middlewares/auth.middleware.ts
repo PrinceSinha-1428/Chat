@@ -16,7 +16,6 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
     const { userId } = decoded as JwtPayload;
     const user = await User.findById(userId);
     if(!user) return res.status(400).json({ message: "user not found" });
-    
     req.user = user;
     next();
   } catch (error) {
