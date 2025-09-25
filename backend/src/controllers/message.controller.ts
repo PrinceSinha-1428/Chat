@@ -8,7 +8,7 @@ export const getAllContacts = async (req: Request, res: Response) => {
   try {
    const loggedInUserId = req.user?._id;
    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId }}).select("-password");
-   return res.status(200).json({success: true, filteredUsers });
+   return res.status(200).json({ success: true, filteredUsers });
   } catch (error) {
     returnError(error,res);
   }
@@ -24,7 +24,7 @@ export const getChatPartners = async (req: Request, res: Response) => {
     });
     const chatPartnersIds = [...new Set(messages.map((msg) => msg.senderId.toString() === loggedInUserId?.toString() ? msg.receiverId.toString() : msg.senderId.toString()))]
     const chatPartners = await User.find({ _id: { $in: chatPartnersIds }}).select("-password");
-    return res.status(200).json({ succes: true, chatPartners})
+    return res.status(200).json({ succes: true, chatPartners });
   } catch (error) {
     returnError(error,res);
   }
@@ -39,7 +39,7 @@ export const getMessageByUserId = async (req: Request, res: Response) => {
         {senderId: userToChatId, receiverId: myId },
       ]
     });
-    return res.status(200).json({ succes: true, messages });
+    return res.status(200).json({ success: true, messages });
   } catch (error) {
     returnError(error,res);
   }
@@ -47,7 +47,15 @@ export const getMessageByUserId = async (req: Request, res: Response) => {
 export const sendMessage = async (req: Request, res: Response) => {
   try {
     const { text, image } = req.body;
+    if(!text) return res.status(400).json({ 
+        success: false,
+       message: "message cannot be empty" 
+      });
     const { id: receiverId } = req.params;
+    if(!receiverId) return res.status(400).json({ 
+      success: false, 
+      message: "Reciever not found"
+     });
     const senderId = req.user?._id;
     let imageUrl;
     if(image){
