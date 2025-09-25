@@ -1,4 +1,5 @@
 import { checkAuthenticated, signIn, signOut, signUp, updateProfile } from "@controllers/auth.controller";
+import { arcjetProtection } from "@middlewares/arcjet.middleware";
 import { protectRoute } from "@middlewares/auth.middleware";
 import { Router } from "express";
 
