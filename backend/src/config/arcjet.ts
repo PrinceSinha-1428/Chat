@@ -1,6 +1,6 @@
 import arcjet, { shield, detectBot, tokenBucket, slidingWindow } from "@arcjet/node";
-import { isSpoofedBot } from "@arcjet/inspect";
 import { ENV } from "./env";
+
 
 
 const aj = arcjet({
@@ -21,7 +21,7 @@ const aj = arcjet({
     }),
     slidingWindow({
       mode: 'LIVE',
-      max: 15,
+      max: 30,
       interval: 60
     })
   ],

@@ -18,7 +18,7 @@ connectDB();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(arcjetProtection);
+// app.use(arcjetProtection);
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 
