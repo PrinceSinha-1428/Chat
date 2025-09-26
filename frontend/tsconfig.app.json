@@ -9,7 +9,9 @@
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@lib/*": ["lib/*"],
+      "@store/*": ["store/*"],
     },
 
     /* Bundler mode */
