@@ -19,7 +19,7 @@ app.use(cors({ origin:ENV.CLIENT_URL,  credentials: true }));
 app.use(cookieParser());
 app.use(express.json({ limit: "5mb"}));
 app.use(express.urlencoded({ extended: true }));
-// app.use(arcjetProtection);
+app.use(arcjetProtection);
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 
