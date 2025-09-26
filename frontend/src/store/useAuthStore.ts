@@ -3,11 +3,9 @@ import type { FormDataType } from "@pages/SignUpPage";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
-interface LoginData {
-  
-  name: string;
+export interface LoginData {
   email: string;
-  
+  password: string;
 }
 
 
@@ -15,18 +13,23 @@ interface LoginData {
 interface AuthState {
   authUser: LoginData | null;
   isLoading: boolean;
-  isLoggedin: boolean;
+  isLoggingIn: boolean;
+  isLoggingOut: boolean;
   isSigningUp: boolean;
   isCheckingAuth: boolean;
-  login: (user: LoginData) => void;
+  login: (user: LoginData) => Promise<void>;
   signup: (user: FormDataType) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   checkAuth:  () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   authUser: null,
   isCheckingAuth: true,
+   isLoading: false,
+  isSigningUp: false,
+  isLoggingIn: false,
+  isLoggingOut: false,
 
   checkAuth: async () => {
     try {
@@ -40,12 +43,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  isLoading: false,
-  isSigningUp: false,
-  isLoggedin: false,
-  login: (user) => {
-    set({ authUser : user})
-  },
+ 
 
   signup: async (data: FormDataType) => {
     try {
@@ -59,8 +57,29 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ isSigningUp: false });
     }
   },
+  login: async (data: LoginData) => {
+    try {
+      set({ isLoggingIn: true });
+      const res = await axiosInstacnce.post("/auth/signin", data);
+      set({ authUser: res.data });
+      toast.success("Logged In Succesfully")
+    } catch (error: any) {
+        toast.error(error.response.data.message)
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
 
-  logout: () => {
-    
+  logout: async () => {
+    try {
+      set({ isLoggingOut: true })
+      await axiosInstacnce.post("/auth/signout");
+      set({ authUser: null });
+      toast.success("Logged out successfully");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isLoggingOut: false });
+    }
   },
 }))

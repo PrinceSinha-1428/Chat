@@ -15,7 +15,7 @@ const SignUpPage: React.FC = () => {
   const [formData, setFormData] = useState<FormDataType>({ name: "",  email: "",password: "" });
 
   const {isSigningUp, signup} = useAuthStore();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     signup(formData);
