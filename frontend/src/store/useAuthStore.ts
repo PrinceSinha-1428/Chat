@@ -10,8 +10,6 @@ export interface LoginData {
   name?: string;
 }
 
-
-
 interface AuthState {
   authUser: LoginData | null;
   isLoading: boolean;
@@ -39,7 +37,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: async () => {
     try {
       const res = await axiosInstacnce.get("/auth/check");
-      set({ authUser: res.data });
+       if(res.data.success){
+        set({ authUser: res.data.user });
+      }
     } catch (error) {
       console.log("Auth check error",error);
       set({ authUser: null})
@@ -48,13 +48,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
- 
-
   signup: async (data: FormDataType) => {
     try {
       set({ isSigningUp: true });
       const res = await axiosInstacnce.post("/auth/signup", data);
-      set({ authUser: res.data });
+       if(res.data.success){
+        set({ authUser: res.data.user });
+      }
       toast.success("Signed Up Succesfully")
     } catch (error: any) {
         toast.error(error.response.data.message)
@@ -66,7 +66,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isLoggingIn: true });
       const res = await axiosInstacnce.post("/auth/signin", data);
-      set({ authUser: res.data });
+      if(res.data.success){
+        set({ authUser: res.data.user });
+      }
       toast.success("Logged In Succesfully")
     } catch (error: any) {
         toast.error(error.response.data.message)
@@ -91,7 +93,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isUpdatingProfilePic: true });
       const res = await axiosInstacnce.put("/auth/update-profile",data);
-      set({ authUser: res.data });
+       if(res.data.success){
+        set({ authUser: res.data.user });
+      }
       toast.success("Profile updated succesfully");
     } catch (error: any) {
       console.log(error.message)
