@@ -16,11 +16,10 @@ const PORT = ENV.PORT || 3000;
 connectDB();
 
 app.use(cors({ origin:ENV.CLIENT_URL,  credentials: true }));
-// app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(arcjetProtection);
+// app.use(arcjetProtection);
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 

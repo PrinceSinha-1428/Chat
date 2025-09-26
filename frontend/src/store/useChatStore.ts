@@ -1,22 +1,29 @@
 import { create } from "zustand";
-import type { LoginData } from "./useAuthStore";
 import toast from "react-hot-toast";
 import { axiosInstacnce } from "@lib/axios";
 
 type Tab = "chats" | "contacts";
 
+interface ChatType {
+  _id: string,
+  name: string,
+  email: string,
+  profilePic: string
+}
+
+
 interface SoundState {
   isSoundEnabled: boolean;
-  allContacts: [],
-  chats: [],
-  messages: [],
+  allContacts: ChatType[];
+  chats: ChatType[];
+  messages: any[];
   activeTab: Tab;
-  selectedUser: null | LoginData,
+  selectedUser: null | ChatType,
   isUsersLoading: boolean,
   isMessagesLoading: boolean,
   toggleSound: () => void;
   setActiveTab: (tab: Tab) => void ;
-  setSelectedUser: (selectedUser: LoginData) => void;
+  setSelectedUser: (selectedUser: ChatType) => void;
   getAllContacts: () => Promise<void>;
   getMyChatPartners: () => Promise<void>;
 }
@@ -27,25 +34,25 @@ export const useChatStore = create<SoundState>((set,get) => ({
   messages: [],
   activeTab: "chats",
   selectedUser: null,
-  isUsersLoading: false,
+  isUsersLoading: true,
   isMessagesLoading: false,
   isSoundEnabled: localStorage.getItem("isSoundEnabled") === "true",
 
   toggleSound: () => {
-     const next = !get().isSoundEnabled;
-  localStorage.setItem("isSoundEnabled", String(next));
-  set({ isSoundEnabled: next });
+    const next = !get().isSoundEnabled;
+    localStorage.setItem("isSoundEnabled", String(next));
+    set({ isSoundEnabled: next });
   },
 
   setActiveTab: (tab: Tab) => set({ activeTab: tab}),
 
-  setSelectedUser: (selectedUser: LoginData) => set({ selectedUser: selectedUser}),
+  setSelectedUser: (selectedUser: ChatType) => set({ selectedUser: selectedUser}),
 
   getAllContacts: async () => {
     try {
       set({ isUsersLoading: true });
       const res = await axiosInstacnce.get("/messages/contacts");
-      set({ allContacts: res.data });
+      set({ allContacts: res.data.filteredUsers });
     } catch (error: any) {
       toast.error(error.response.data.message)
     } finally {
@@ -57,7 +64,7 @@ export const useChatStore = create<SoundState>((set,get) => ({
     try {
       set({ isUsersLoading: true });
       const res = await axiosInstacnce.get("/messages/chats");
-      set({ chats: res.data });
+      set({ chats: res.data.chatPartners });
     } catch (error: any) {
       toast.error(error.response.data.message)
     } finally {

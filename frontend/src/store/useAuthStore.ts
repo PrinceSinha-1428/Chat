@@ -37,9 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: async () => {
     try {
       const res = await axiosInstacnce.get("/auth/check");
-       if(res.data.success){
-        set({ authUser: res.data.user });
-      }
+      set({ authUser: res.data });
     } catch (error) {
       console.log("Auth check error",error);
       set({ authUser: null})
@@ -52,9 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isSigningUp: true });
       const res = await axiosInstacnce.post("/auth/signup", data);
-       if(res.data.success){
-        set({ authUser: res.data.user });
-      }
+      set({ authUser: res.data.success ? res.data.user : null });
       toast.success("Signed Up Succesfully")
     } catch (error: any) {
         toast.error(error.response.data.message)
@@ -66,9 +62,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isLoggingIn: true });
       const res = await axiosInstacnce.post("/auth/signin", data);
-      if(res.data.success){
-        set({ authUser: res.data.user });
-      }
+      set({ authUser: res.data.success ? res.data.user : null });
       toast.success("Logged In Succesfully")
     } catch (error: any) {
         toast.error(error.response.data.message)
@@ -93,9 +87,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isUpdatingProfilePic: true });
       const res = await axiosInstacnce.put("/auth/update-profile",data);
-       if(res.data.success){
-        set({ authUser: res.data.user });
-      }
+      set({ authUser: res.data.success ? res.data.user : null });
       toast.success("Profile updated succesfully");
     } catch (error: any) {
       console.log(error.message)
