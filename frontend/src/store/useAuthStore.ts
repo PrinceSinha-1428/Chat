@@ -6,6 +6,8 @@ import { create } from "zustand";
 export interface LoginData {
   email: string;
   password: string;
+  profilePic?: string;
+  name?: string;
 }
 
 
@@ -17,10 +19,12 @@ interface AuthState {
   isLoggingOut: boolean;
   isSigningUp: boolean;
   isCheckingAuth: boolean;
+  isUpdatingProfilePic: boolean;
   login: (user: LoginData) => Promise<void>;
   signup: (user: FormDataType) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth:  () => Promise<void>;
+  updateProfile: (data: any) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -30,6 +34,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isLoggingOut: false,
+  isUpdatingProfilePic: false,
 
   checkAuth: async () => {
     try {
@@ -82,4 +87,17 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ isLoggingOut: false });
     }
   },
+  updateProfile: async (data: any) => {
+    try {
+      set({ isUpdatingProfilePic: true });
+      const res = await axiosInstacnce.put("/auth/update-profile",data);
+      set({ authUser: res.data });
+      toast.success("Profile updated succesfully");
+    } catch (error: any) {
+      console.log(error.message)
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUpdatingProfilePic: false });
+    }
+  }
 }))
