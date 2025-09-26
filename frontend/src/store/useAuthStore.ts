@@ -1,17 +1,23 @@
-import { axiosInstacnce } from "@lib/axios";
+import { axiosInstance } from "@lib/axios";
 import type { FormDataType } from "@pages/SignUpPage";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
 export interface LoginData {
   email: string;
-  password: string;
-  profilePic?: string;
-  name?: string;
+  password?: string;
+}
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  profilePic: string;
+  createdAt: string;
 }
 
 interface AuthState {
-  authUser: LoginData | null;
+  authUser: User | null;
   isLoading: boolean;
   isLoggingIn: boolean;
   isLoggingOut: boolean;
@@ -36,7 +42,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   checkAuth: async () => {
     try {
-      const res = await axiosInstacnce.get("/auth/check");
+      const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
     } catch (error) {
       console.log("Auth check error",error);
@@ -49,8 +55,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   signup: async (data: FormDataType) => {
     try {
       set({ isSigningUp: true });
-      const res = await axiosInstacnce.post("/auth/signup", data);
-      set({ authUser: res.data.success ? res.data.user : null });
+      const res = await axiosInstance.post("/auth/signup", data);
+      console.log(res.data)
+      set({ authUser: res.data.user});
       toast.success("Signed Up Succesfully")
     } catch (error: any) {
         toast.error(error.response.data.message)
@@ -61,8 +68,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (data: LoginData) => {
     try {
       set({ isLoggingIn: true });
-      const res = await axiosInstacnce.post("/auth/signin", data);
-      set({ authUser: res.data.success ? res.data.user : null });
+      const res = await axiosInstance.post("/auth/signin", data);
+      set({ authUser:  res.data.user });
       toast.success("Logged In Succesfully")
     } catch (error: any) {
         toast.error(error.response.data.message)
@@ -74,7 +81,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     try {
       set({ isLoggingOut: true })
-      await axiosInstacnce.post("/auth/signout");
+      await axiosInstance.post("/auth/signout");
       set({ authUser: null });
       toast.success("Logged out successfully");
     } catch (error: any) {
@@ -86,7 +93,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   updateProfile: async (data: any) => {
     try {
       set({ isUpdatingProfilePic: true });
-      const res = await axiosInstacnce.put("/auth/update-profile",data);
+      const res = await axiosInstance.put("/auth/update-profile",data);
       set({ authUser: res.data.success ? res.data.user : null });
       toast.success("Profile updated succesfully");
     } catch (error: any) {

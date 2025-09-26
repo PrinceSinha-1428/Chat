@@ -12,6 +12,7 @@
       "@pages/*": ["pages/*"],
       "@lib/*": ["lib/*"],
       "@store/*": ["store/*"],
+      "@hooks/*": ["hooks/*"],
     },
 
     /* Bundler mode */

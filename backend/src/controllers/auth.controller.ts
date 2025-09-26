@@ -37,7 +37,14 @@ export const signUp = async (req: Request, res: Response) => {
       } catch (error) {
         console.log("failed to send welcome email")
       } finally {
-        return res.status(201).json({ sucess: true, message: "user created succesfully", newUser });
+        const user = {
+          _id: newUser._id,
+          name: newUser.name,
+          email: newUser.email,
+          profilePic: newUser.profilePic,
+          createdAt: newUser.createdAt
+        };
+        return res.status(201).json({ sucess: true, message: "user created succesfully", user });
       }
     } else {
       return res.status(400).json({ sucess: false, message: "Invalid User Data"});
